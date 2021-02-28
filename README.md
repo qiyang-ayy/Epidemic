@@ -12,7 +12,7 @@ The assumptions of virus as follow:
 
 (specific content is mention in epidemic.py, the distributions is shown as follow)
 ![Image text](https://github.com/mqyang91/Epidemic/blob/master/IMG-folder/assumptions.jpg)
-![Image text](https://github.com/mqyang91/Epidemic/tree/master/IMG-folder/infenction.jpg)
+![Image text](https://github.com/mqyang91/Epidemic/blob/master/IMG-folder/infenction.jpg)
 
 In addition, it is assumed that there are total 300 individuals in the environment to compare the results from diverse situations. In the model, 10% people are randomly selected and be decided as the patients who have symptom. Meanwhile, there are another 10% people who actually get infected but have no symptoms.
 
@@ -21,18 +21,18 @@ Part I - Study on Isolation Method
 Model 1:
 Completely isolation - everyone is immediately isolated from each other if there are infected people exist in the environment.
 Finally, The average final number of rest healthy people, recovery people, dead people are respectively 230, 63 and 7. No patients at all need average 14 days. This is the fastest way to get society back to normal.
-![Image text](https://github.com/mqyang91/Epidemic/tree/master/IMG-folder/model1.jpg)
+![Image text](https://github.com/mqyang91/Epidemic/blob/master/IMG-folder/model1.jpg)
 
 Model 2:
 Partial isolation - the person is isolated from the outside world after he or she has sick.
 Finally, The average final number of rest healthy people, recovery people, dead people are respectively 3, 267 and 30. No patients at all need average 20 days. Because of the hidden attribution for this virus, nearly 100% people in the network are infected which means this isolation approach has no effect.
-![Image text](https://github.com/mqyang91/Epidemic/tree/master/IMG-folder/model2.jpg)
+![Image text](https://github.com/mqyang91/Epidemic/blob/master/IMG-folder/model2.jpg)
 
 Model 3:
 Timely isolation - considers the history of the records of people contacted, if anyone has symptoms, the touch persons in his or her touch history might be infected, so he or she and those people in the list will be isolated.
 Finally, The average final number of rest healthy people, recovery people, dead people are respectively 168, 122 and 10. No patients at
 all need average 18 days. This isolation method by recording touch history is effective and efficient. Most importantly, few people who are not suspected to infected and recovery humans can continue to work during the isolation period.
-![Image text](https://github.com/mqyang91/Epidemic/tree/master/IMG-folder/model3.jpg)
+![Image text](https://github.com/mqyang91/Epidemic/blob/master/IMG-folder/model3.jpg)
 
 
 Part II - Study on Hospital Stategy
@@ -41,11 +41,11 @@ The isolation strategies mentioned before do not involve any medical resources. 
 Model 4:
 Hospital admission in sequential - the patients that accepted by the hospital are decided by the order of the people get infected. In another word, people who are infected first can go to the hospital earlier than the people get infected later, no matter whether their states are severe or mild.
 Finally, no patients at all need average 36 days and the average final number of recovery people and dead people are respectively 260 and 40.
-![Image text](https://github.com/mqyang91/Epidemic/tree/master/IMG-folder/model4.jpg)
+![Image text](https://github.com/mqyang91/Epidemic/blob/master/IMG-folder/model4.jpg)
 
 Model 5:
 Hospital admission in severity - hospital rule is that the earlier the infection time, the higher the priority is employed to decide the order of accessing in hospital and this order is updated each day. All the people infected at current time will be evaluated.
 Finally, The condition that no patients in the environment needs average 36 days and the average final number of recovery people and dead people are 280 and 20 respectively. Therefore, good strategy to decide the sequence of hospital acceptance such as based on the possible infection time can speed up the recovery of the society under the condition that the medical resources are limited.
-![Image text](https://github.com/mqyang91/Epidemic/tree/master/IMG-folder/model5.jpg)
+![Image text](https://github.com/mqyang91/Epidemic/blob/master/IMG-folder/model5.jpg)
 
 To sum up, I think isolation is necessary to stop spreading the virus and timely isolation is useful. Recording the contact history can help to control the spread of the virus. In addition, hospital accept the patient according to the severity has better performance. Thus, Combining these two approaches, timely isolation and hospital admission severity, maybe better stop the virus from getting worse and get back to normal faster.
