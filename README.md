@@ -11,7 +11,7 @@ The assumptions of virus as follow:
 4. For the scenario that consider the asymptomatic virus carriers, the rate that the patient show some symptom is linear increase.
 
 (specific content is mention in epidemic.py, the distributions is shown as follow)
-![Image text](https://github.com/mqyang91/Epidemic/tree/master/IMG-folder/assumptions.jpg)
+![Image text](https://github.com/mqyang91/Epidemic/blob/master/IMG-folder/assumptions.jpg)
 ![Image text](https://github.com/mqyang91/Epidemic/tree/master/IMG-folder/infenction.jpg)
 
 In addition, it is assumed that there are total 300 individuals in the environment to compare the results from diverse situations. In the model, 10% people are randomly selected and be decided as the patients who have symptom. Meanwhile, there are another 10% people who actually get infected but have no symptoms.
