@@ -53,215 +53,214 @@ n = 300 # The number of nodes
 density = 2 # edges density
 d1 = 0.1 # the density of patients
 d2 = 0.1 # the density of asymptomatical virus carriers
-crowd_num = [ 10, 20 ] # the range of the number of crowds/clusters
+crowd_num = [10, 20] # the range of the number of crowds/clusters
 
 # Model 1
 # Completely isolation - Everyone is immediately isolated from each other
 class complete_isolation:
-    def __init__( self, n = n, density = density, d1 = d1, d2 = d2, crowd_num = crowd_num ):
+    def __init__(self, n = n, density = density, d1 = d1, d2 = d2, crowd_num = crowd_num):
         self.n = n
         self.density = density
         self.d1 = d1
         self.d2 = d2
         self.crowd_num = crowd_num
     
-    def initialize( self ):
+    def initialize(self):
         global g, daynum, virus        
         daynum = 0
         g = nx.Graph()
         virus = ed.virus()
-        g = ed.createNodes( self.n, self.d1, self.d2, self.crowd_num, virus )
-        g = ed.createEdges( g, daynum, self.density, virus )
+        g = ed.createNodes(self.n, self.d1, self.d2, self.crowd_num, virus)
+        g = ed.createEdges(g, daynum, self.density, virus)
     
-    def observe( self ):
+    def observe(self):
         global g, daynum, virus        
         plt.cla()
-        layout = nx.spring_layout( g )
-        nx.draw( g, node_color = [ g.nodes[i][ 'color' ] for i in g.nodes ], node_size = 20, pos = layout )
-        t = 'persons: ' + str( self.n ) + ', heathy: ' + str( virus.hnum ) + ', sick: ' + str( virus.pnum ) \
-                + ', recovery: ' + str( virus.rnum ) + ', death: ' + str( virus.dnum ) + ' - day: ' + str( daynum ) 
-        plt.title( t, fontsize = 10, fontfamily = 'Times New Roman' )
+        layout = nx.spring_layout(g)
+        nx.draw(g, node_color = [g.nodes[i]['color'] for i in g.nodes], node_size = 20, pos = layout)
+        t = 'persons: ' + str(self.n) + ', heathy: ' + str(virus.hnum) + ', sick: ' + str(virus.pnum) \
+                + ', recovery: ' + str(virus.rnum) + ', death: ' + str(virus.dnum) + ' - day: ' + str(daynum) 
+        plt.title(t, fontsize = 10, fontfamily = 'Times New Roman')
     
-    def update( self ):
+    def update(self):
         global g, daynum, virus
         daynum += 1
         
         for i in g.nodes:
-            for j in list( g.neighbors( i ) ):
-                g.remove_edge( i, j )
-            if g.nodes[i][ 'real' ] >= 1:
-                g.nodes[i][ 'state' ] = g.nodes[i][ 'real' ]
-                g.nodes[i][ 'real'] = 0
+            for j in list(g.neighbors(i)):
+                g.remove_edge(i, j)
+            if g.nodes[i]['real'] >= 1:
+                g.nodes[i]['state'] = g.nodes[i]['real']
+                g.nodes[i]['real'] = 0
         g2 = g.copy()
         for i in g2.nodes:
-            if g.nodes[i][ 'state' ] >= 1:
-                g.nodes[i][ 'state' ] += 1
-                if rd.random() < virus.recovery_prob( g.nodes[i][ 'state' ] ):
-                    g.nodes[i][ 'state' ] = 0.5 # The sick person recovered
-                    g.nodes[i][ 'color' ] = 'g'
+            if g.nodes[i]['state'] >= 1:
+                g.nodes[i]['state'] += 1
+                if rd.random() < virus.recovery_prob(g.nodes[i]['state']):
+                    g.nodes[i]['state'] = 0.5 # The sick person recovered
+                    g.nodes[i]['color'] = 'g'
                     virus.rnum += 1
                     virus.pnum -= 1
                     continue
-                if rd.random() < virus.death_prob( g.nodes[i][ 'state' ] ):
-                    g.remove_node( i ) # The sick person has probability to die
+                if rd.random() < virus.death_prob(g.nodes[i]['state']):
+                    g.remove_node(i) # The sick person has probability to die
                     virus.dnum += 1
                     virus.pnum -= 1
                     continue
     
-    def run( self ):
-        pycxsimulator.GUI().start( func = [ self.initialize, self.observe, self.update ] )
+    def run(self):
+        pycxsimulator.GUI().start(func = [self.initialize, self.observe, self.update])
 
 
 # Model 2
 # Partially isolation - after he or she sicks, isolated from the outside world
 class partial_isolation:
-    def __init__( self, n = n, density = density, d1 = d1, d2 = d2, crowd_num = crowd_num ):
+    def __init__(self, n = n, density = density, d1 = d1, d2 = d2, crowd_num = crowd_num):
         self.n = n
         self.density = density
         self.d1 = d1
         self.d2 = d2
         self.crowd_num = crowd_num
     
-    def initialize( self ):
+    def initialize(self):
         global g, daynum, virus        
         daynum = 0
         g = nx.Graph()
         virus = ed.virus()
-        g = ed.createNodes( self.n, self.d1, self.d2, self.crowd_num, virus )
-        g = ed.createEdges( g, daynum, self.density, virus )
+        g = ed.createNodes(self.n, self.d1, self.d2, self.crowd_num, virus)
+        g = ed.createEdges(g, daynum, self.density, virus)
     
-    def observe( self ):
+    def observe(self):
         global g, daynum, virus        
         plt.cla()
-        layout = nx.spring_layout( g )
-        nx.draw( g, node_color = [ g.nodes[ i ][ 'color' ] for i in g.nodes ], node_size = 20, pos = layout )
-        t = 'persons: ' + str( n ) + ', heathy: ' + str( virus.hnum ) + ', sick: ' + str( virus.pnum ) \
-                + ', recovery: ' + str( virus.rnum ) + ', death: ' + str( virus.dnum ) + ' - day: ' + str( daynum ) 
-        plt.title( t, fontsize = 10, fontfamily = 'Times New Roman' )
+        layout = nx.spring_layout(g)
+        nx.draw(g, node_color = [g.nodes[i]['color'] for i in g.nodes], node_size = 20, pos = layout)
+        t = 'persons: ' + str(n) + ', heathy: ' + str(virus.hnum) + ', sick: ' + str(virus.pnum) \
+                + ', recovery: ' + str(virus.rnum) + ', death: ' + str(virus.dnum) + ' - day: ' + str(daynum) 
+        plt.title(t, fontsize = 10, fontfamily = 'Times New Roman')
     
-    def update( self ):
+    def update(self):
         global g, daynum, virus
         daynum += 1
         
         #update links
-        g = ed.updateLinks( g, self.density, self.crowd_num )
+        g = ed.updateLinks(g, self.density, self.crowd_num)
         
         # Update infection
-        g = ed.updateInfected( g, virus )
+        g = ed.updateInfected(g, virus)
     
-        
         g2 = g.copy()
         # Update isolation and epidemic information
         for i in g2.nodes:
-            if g.nodes[ i ][ 'state' ] == 0:
-                for j in list( g.neighbors( i ) ):
-                    if g.nodes[ j ][ 'state' ] >= 1:
-                        g.remove_edge( i, j  )
-                if g.nodes[ i ][ 'real' ] >= 1:
-                    g.nodes[i][ 'real' ] += 1
-                if rd.random() < virus.explicit_prob( g.nodes[ i ][ 'real' ] ):
-                    g.nodes[ i ][ 'state' ] = g.nodes[ i ][ 'real' ]
-                    g.nodes[ i ][ 'color' ] = 'r'
-            elif g.nodes[ i ][ 'state' ] >= 1:
-                g.nodes[ i ][ 'isolation' ] = 1
-                if rd.random() < virus.recovery_prob( g.nodes[ i ][ 'real' ] ):
-                    g.nodes[ i ][ 'state' ] = 0.5 # The sick person recovered
-                    g.nodes[ i ][ 'real' ] = 0.5
-                    g.nodes[ i ][ 'color' ] = 'g'
-                    g.nodes[ i ][ 'isolation' ] = 0
+            if g.nodes[i]['state'] == 0:
+                for j in list(g.neighbors(i)):
+                    if g.nodes[j]['state'] >= 1:
+                        g.remove_edge(i, j)
+                if g.nodes[i]['real'] >= 1:
+                    g.nodes[i]['real'] += 1
+                if rd.random() < virus.explicit_prob(g.nodes[i]['real']):
+                    g.nodes[i]['state'] = g.nodes[i]['real']
+                    g.nodes[i]['color'] = 'r'
+            elif g.nodes[i]['state'] >= 1:
+                g.nodes[i]['isolation'] = 1
+                if rd.random() < virus.recovery_prob(g.nodes[i]['real']):
+                    g.nodes[i]['state'] = 0.5 # The sick person recovered
+                    g.nodes[i]['real'] = 0.5
+                    g.nodes[i]['color'] = 'g'
+                    g.nodes[i]['isolation'] = 0
                     virus.rnum += 1
                     virus.pnum -= 1
                     continue
-                if rd.random() < virus.death_prob( g.nodes[ i ][ 'real' ] ):
-                    g.remove_node( i ) # The sick person has probability to die
+                if rd.random() < virus.death_prob(g.nodes[i]['real']):
+                    g.remove_node(i) # The sick person has probability to die
                     virus.dnum += 1
                     virus.pnum -= 1
                     continue
-                g.nodes[i][ 'state' ] += 1
-                g.nodes[i][ 'real' ] += 1
+                g.nodes[i]['state'] += 1
+                g.nodes[i]['real'] += 1
     
-    def run( self ):
+    def run(self):
         pycxsimulator.GUI().start( func = [ self.initialize, self.observe, self.update ] )
 
 
 # Model 3
 # timely isolation - The patients and the people who are in his or her touch history list will be isolated as well.
 class time_isolation:
-    def __init__( self, n = n, density = density, d1 = d1, d2 = d2, crowd_num = crowd_num ):
+    def __init__(self, n = n, density = density, d1 = d1, d2 = d2, crowd_num = crowd_num):
         self.n = n
         self.density = density
         self.d1 = d1
         self.d2 = d2
         self.crowd_num = crowd_num
         
-    def initialize( self ):
+    def initialize(self):
         global g, daynum, virus
         daynum = 0
         virus = ed.virus()
         
         g = nx.Graph()
-        g = ed.createNodes( self.n, self.d1, self.d2, self.crowd_num, virus )
-        g = ed.createEdges( g, daynum, self.density, virus  )
+        g = ed.createNodes(self.n, self.d1, self.d2, self.crowd_num, virus)
+        g = ed.createEdges(g, daynum, self.density, virus)
     
-    def observe( self ):
+    def observe(self):
         global g, daynum, virus    
         plt.cla()
-        layout = nx.spring_layout( g )
-        nx.draw( g, node_color = [ g.nodes[i][ 'color' ] for i in g.nodes ], node_size = 20, pos = layout )
-        t = 'persons: ' + str( n ) + ', heathy: ' + str( virus.hnum ) + ', sick: ' + str( virus.pnum ) \
-                + ', recovery: ' + str( virus.rnum ) + ', death: ' + str( virus.dnum ) + ' - day: ' + str( daynum ) 
-        plt.title( t, fontsize = 10, fontfamily = 'Times New Roman' )
+        layout = nx.spring_layout(g)
+        nx.draw(g, node_color = [g.nodes[i]['color'] for i in g.nodes], node_size = 20, pos = layout)
+        t = 'persons: ' + str(n) + ', heathy: ' + str(virus.hnum) + ', sick: ' + str(virus.pnum) \
+                + ', recovery: ' + str(virus.rnum) + ', death: ' + str(virus.dnum) + ' - day: ' + str(daynum) 
+        plt.title(t, fontsize = 10, fontfamily = 'Times New Roman')
     
-    def update( self ):
+    def update(self):
         global g, daynum, virus       
         daynum += 1
         
         # update links
-        g = ed.updateLinks( g, self.density, self.crowd_num )
+        g = ed.updateLinks(g, self.density, self.crowd_num)
         
         # update infection
-        g = ed.updateInfected( g, virus )
+        g = ed.updateInfected(g, virus)
         
         # update isolation and epidemic information
         g2 = g.copy()
         for i in g2.nodes:
-            if g.nodes[ i ][ 'state' ] == 0:
-                if g.nodes[ i ][ 'real' ] >= 1:
-                    g.nodes[i][ 'real' ] += 1
-                    g.nodes[i][ 'iso_day' ] += 1
-                if rd.random() < virus.explicit_prob( g.nodes[ i ][ 'real' ] ):
-                    g.nodes[ i ][ 'state' ] = 1
-                    g.nodes[ i ][ 'color' ] = 'r'
-                if g.nodes[ i ][ 'real' ] == 0 and g.nodes[ i ][ 'isolation' ] == 1:
-                    g.nodes[ i ][ 'iso_day' ] += 1
-                    g.nodes[ i ][ 'isolation' ] = virus.free( g.nodes[ i ][ 'iso_day' ] )
-            if g.nodes[ i ][ 'state' ] >= 1:
-                g.nodes[ i ][ 'isolation' ] = 1
-                if g.nodes[ i ][ 'state' ] == 1:
-                    for key in g.nodes[ i ][ 'touch_history' ]:
-                        touches = set( g.nodes[ i ][ 'touch_history' ][ key ] )
+            if g.nodes[i]['state'] == 0:
+                if g.nodes[i]['real'] >= 1:
+                    g.nodes[i]['real'] += 1
+                    g.nodes[i]['iso_day'] += 1
+                if rd.random() < virus.explicit_prob(g.nodes[i]['real']):
+                    g.nodes[i]['state'] = 1
+                    g.nodes[i]['color'] = 'r'
+                if g.nodes[i]['real'] == 0 and g.nodes[i]['isolation'] == 1:
+                    g.nodes[i]['iso_day'] += 1
+                    g.nodes[i]['isolation'] = virus.free(g.nodes[i]['iso_day'])
+            if g.nodes[i]['state'] >= 1:
+                g.nodes[i]['isolation'] = 1
+                if g.nodes[i]['state'] == 1:
+                    for key in g.nodes[i]['touch_history']:
+                        touches = set(g.nodes[i]['touch_history'][key])
                         for p in touches:
                             if p in g.nodes:
-                                if g.nodes[ p ][ 'real' ] != 0.5:
-                                    g.nodes[ p ][ 'isolation' ] = 1
+                                if g.nodes[p]['real'] != 0.5:
+                                    g.nodes[p]['isolation'] = 1
                                     tmp = daynum % virus.hidden_day - key if daynum % virus.hidden_day > key \
                                                 else virus.hidden_day - key + daynum % virus.hidden_day
-                                    g.nodes[ p ][ 'iso_day' ] = min( g.nodes[ p ][ 'iso_day' ], tmp )
-                if rd.random() < virus.recovery_prob( g.nodes[i][ 'real' ] ):
-                    g.nodes[i][ 'state' ] = 0.5 # The sick person recovered
-                    g.nodes[i][ 'real' ] = 0.5
-                    g.nodes[i][ 'isolation' ] = 0
-                    g.nodes[i][ 'color' ] = 'g'
+                                    g.nodes[p]['iso_day'] = min(g.nodes[p]['iso_day'], tmp)
+                if rd.random() < virus.recovery_prob(g.nodes[i]['real']):
+                    g.nodes[i]['state'] = 0.5 # The sick person recovered
+                    g.nodes[i]['real'] = 0.5
+                    g.nodes[i]['isolation'] = 0
+                    g.nodes[i]['color'] = 'g'
                     virus.rnum += 1
                     virus.pnum -= 1
                     continue
-                if rd.random() < virus.death_prob( g.nodes[i][ 'real' ] ):
-                    g.remove_node( i ) # The sick person has probability to die  
+                if rd.random() < virus.death_prob(g.nodes[i]['real']):
+                    g.remove_node(i) # The sick person has probability to die  
                     virus.dnum += 1
                     virus.pnum -= 1
                     continue
-                g.nodes[ i ][ 'state' ] += 1
-                g.nodes[ i ][ 'real' ] += 1
+                g.nodes[i]['state'] += 1
+                g.nodes[i]['real'] += 1
     
-    def run( self ):
-        pycxsimulator.GUI().start( func = [ self.initialize, self.observe, self.update ] )
+    def run(self):
+        pycxsimulator.GUI().start(func = [self.initialize, self.observe, self.update])
