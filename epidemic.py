@@ -65,50 +65,49 @@ from collections import defaultdict
 # Creat virus class
 class virus:
     hnum, pnum, rnum, dnum = 0, 0, 0, 0
-    def __init__( self, hidden_day = 14, recovery = [ 30, 15 ], death = 51, infected = 9  ):
+    def __init__(self, hidden_day = 14, recovery = [30, 15], death = 51, infected = 9):
         self.hidden_day = hidden_day
         self.coef_recovery = recovery
         self.coef_death = death
         self.coef_infected = infected
     
-    def recovery_prob( self, x, hos = 0 ):
+    def recovery_prob(self, x, hos = 0):
         rec = self.coef_recovery
         if hos:
-            return norm( rec[0], rec[1] ).pdf( x ) * 30 # recovery probability in hospital
+            return norm(rec[0], rec[1]).pdf(x) * 30 # recovery probability in hospital
         else:
-            return norm( rec[0], rec[1] ).pdf( x ) * 20 # recovery probability conform to normal distribution
+            return norm(rec[0], rec[1]).pdf(x) * 20 # recovery probability conform to normal distribution
 
-    def death_prob( self, x, hos = 0 ):
+    def death_prob(self, x, hos = 0):
         death = self.coef_death
         if hos:
             death += 5
             if x > death:
                 x = death
-            return 1 / ( death-x ) # death probability in hospital 
+            return 1 / (death - x) # death probability in hospital 
         else:
             if x > death:
                 x = death
-            return 1 / ( death-x ) # death probability conforms to inverse distribution
+            return 1 / (death - x) # death probability conforms to inverse distribution
 
-    def infection_prob( self, x ):
+    def infection_prob(self, x):
         infected = self.coef_infected
         if x > infected:
             x = infected
-        return pylab.log10( 1+x ) # infection probability conforms to log distribution
+        return pylab.log10(1 + x) # infection probability conforms to log distribution
 
-    def explicit_prob( self, x ):
+    def explicit_prob(self, x):
         return x / self.hidden_day
     
-    def free( self, x ):
+    def free(self, x):
         if x >= self.hidden_day:
             return 0
         else:
             return 1
 
-
 # Functions    
 # create the network including nodes and edges to make up different groups in network/society
-def createNodes( n, d1 = 0.1, d2 = 0.1, crowd_num = [ 10, 20 ], virus = virus() ):
+def createNodes(n, d1 = 0.1, d2 = 0.1, crowd_num = [ 10, 20 ], virus = virus()):
     # Inputs:
     # n - # of nodes in network, means population in a society
     # d1, d2 - the density of patients, the density of asymptomatic virus carriers
@@ -116,82 +115,82 @@ def createNodes( n, d1 = 0.1, d2 = 0.1, crowd_num = [ 10, 20 ], virus = virus() 
     # Outputs:
     # g - network
     g = nx.Graph()
-    numOfplace = pylab.choice( list( range( crowd_num[0], crowd_num[1] ) ) )    
-    # create nodes ( persons ) and set their states in the network
-    for i in range( n ):
-        g.add_node( i )
-        g.nodes[ i ][ 'state' ] = 1 if rd.random() < d1 else 0  # explicit state of persons
-        g.nodes[ i ][ 'loc' ] = pylab.choice( numOfplace )
-        g.nodes[ i ][ 'touch_history' ] = defaultdict( list ) # record touch history of the node (person)
-        g.nodes[ i ][ 'isolation' ] = 0 # whether isolation
-        g.nodes[ i ][ 'iso_day' ] = virus.hidden_day # the number of isolation days
-        g.nodes[ i ][ 'hospital' ] = 0  # whether in hospital or not
-        g.nodes[ i ][ 'hos_order' ] = 0 # the order of accessing in hospital
-        if g.nodes[ i ][ 'state' ] == 0 and rd.random() < d2:
-            g.nodes[ i ][ 'real' ] = 1  # real state of persons
-        elif g.nodes[ i ][ 'state' ] == 1:
-            g.nodes[ i ][ 'real' ] = 1
+    numOfplace = pylab.choice(list(range(crowd_num[0], crowd_num[1])))    
+    # create nodes (persons) and set their states in the network
+    for i in range(n):
+        g.add_node(i)
+        g.nodes[i]['state'] = 1 if rd.random() < d1 else 0  # explicit state of persons
+        g.nodes[i]['loc'] = pylab.choice(numOfplace)
+        g.nodes[i]['touch_history'] = defaultdict(list) # record touch history of the node (person)
+        g.nodes[i]['isolation'] = 0 # whether isolation
+        g.nodes[i]['iso_day'] = virus.hidden_day # the number of isolation days
+        g.nodes[i]['hospital'] = 0  # whether in hospital or not
+        g.nodes[i]['hos_order'] = 0 # the order of accessing in hospital
+        if g.nodes[i]['state'] == 0 and rd.random() < d2:
+            g.nodes[i]['real'] = 1  # real state of persons
+        elif g.nodes[i]['state'] == 1:
+            g.nodes[i]['real'] = 1
         else:
-            g.nodes[ i ][ 'real' ] = 0
-        if g.nodes[ i ][ 'state' ] == 0 and g.nodes[ i ][ 'real' ] == 1:
-            g.nodes[ i ][ 'color' ] = 'y'
+            g.nodes[i]['real'] = 0
+        if g.nodes[i]['state'] == 0 and g.nodes[i]['real'] == 1:
+            g.nodes[i]['color'] = 'y'
             virus.pnum += 1
-        elif g.nodes[ i ][ 'state' ] == 1 and g.nodes[ i ][ 'real' ] == 1:
-            g.nodes[ i ][ 'color' ] = 'r'
+        elif g.nodes[i]['state'] == 1 and g.nodes[i]['real'] == 1:
+            g.nodes[i]['color'] = 'r'
             virus.pnum += 1
         else:
-            g.nodes[ i ][ 'color' ] = 'b'
+            g.nodes[i]['color'] = 'b'
             virus.hnum += 1
     return g
 
-def createEdges( g, daynum, density = 2, virus = virus() ): 
+def createEdges(g, daynum, density = 2, virus = virus()): 
     # Inputs:
     # g - network without edges
     # daynum - number of days
     # density - the edge density in the secondary clusters / crowds, the larger, the denser
     # Outputs:
     # g - network with new edges, and record touch nodes in this day
-    placeDic = defaultdict( list )
+    placeDic = defaultdict(list)
     for i in g.nodes:
-        if not g.nodes[ i ][ 'isolation' ]:
-            place = g.nodes[ i ][ 'loc' ]
-            placeDic[ place ].append( i )
+        if not g.nodes[i]['isolation']:
+            place = g.nodes[i]['loc']
+            placeDic[place].append(i)
     
     for key in placeDic:
-        if len( placeDic[ key ] ) > 1:
-            for i in range( len( placeDic[ key ] ) * density ):
-                a, b = pylab.choice( placeDic[ key ], 2, replace = False )
-                g.nodes[ a ][ 'touch_history' ][ daynum % virus.hidden_day ].append( b )
-                g.nodes[ b ][ 'touch_history' ][ daynum % virus.hidden_day ].append( a )
-                g.add_edge( a, b )
+        if len(placeDic[key]) > 1:
+            for i in range(len(placeDic[key]) * density):
+                a, b = pylab.choice(placeDic[key], 2, replace = False)
+                g.nodes[a]['touch_history'][daynum % virus.hidden_day].append(b)
+                g.nodes[b]['touch_history'][daynum % virus.hidden_day].append(a)
+                g.add_edge(a, b)
     return g
 
 # update links (edges) to new groups and update the infection people
-def updateLinks( g, density = 2, crowd_num = [ 10, 20 ] ):
+def updateLinks(g, density = 2, crowd_num = [10, 20]):
     # Outputs:
     # network with new edges
-    edges = list( g.edges() )
-    g.remove_edges_from( edges )
-    numOfplace = pylab.choice( list( range( crowd_num[0], crowd_num[1] ) ) )
+    edges = list(g.edges())
+    g.remove_edges_from(edges)
+    numOfplace = pylab.choice(list(range(crowd_num[0], crowd_num[1])))
     for i in g.nodes:
-        g.nodes[ i ][ 'loc' ] = pylab.choice( numOfplace )
-    g = createEdges( g, density )
+        g.nodes[i]['loc'] = pylab.choice(numOfplace)
+    g = createEdges(g, density)
     return g
 
-def updateInfected( g, virus = virus() ):
+def updateInfected(g, virus = virus()):
     # Outputs:
     # network with new infected people
     for i in g.nodes:
-        if g.nodes[ i ][ 'real' ] == 0:
-            numOfsick = sum( [ 1 for j in list( g.neighbors( i ) ) if g.nodes[j][ 'real' ] >= 1 ] )
-            if rd.random() < virus.infection_prob( numOfsick ):
-                g.nodes[ i ][ 'real' ] = 1
+        if g.nodes[i]['real'] == 0:
+            numOfsick = sum([1 for j in list(g.neighbors(i)) if g.nodes[j]['real'] >= 1])
+            if rd.random() < virus.infection_prob(numOfsick):
+                g.nodes[i]['real'] = 1
                 virus.pnum += 1
                 virus.hnum -= 1
-                if rd.random() < virus.explicit_prob( g.nodes[ i ][ 'real' ] ):
-                    g.nodes[ i ][ 'state' ] = 1
-                    g.nodes[ i ][ 'color' ] = 'r'
+                if rd.random() < virus.explicit_prob(g.nodes[i]['real']):
+                    g.nodes[i]['state'] = 1
+                    g.nodes[i]['color'] = 'r'
                 else:
-                    g.nodes[ i ][ 'state' ] = 0
-                    g.nodes[ i ][ 'color' ] = 'y'
+                    g.nodes[i]['state'] = 0
+                    g.nodes[i]['color'] = 'y'
     return g
