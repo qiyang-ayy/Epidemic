@@ -9,21 +9,15 @@
 ## email@chunwong.net
 ##
 ## Revisions by:
-## Hiroki Sayama
-## sayama@binghamton.edu
+## Qiyang Ma
+## qma1@binghamton.edu
 ##
 ## Copyright 2012 Chun Wong
-## Copyright 2012-2019 Hiroki Sayama
 ##
 ## Simulation control & GUI extensions
 ## Copyright 2013 Przemyslaw Szufel & Bogumil Kaminski
 ## {pszufe, bkamins}@sgh.waw.pl
 ##
-## Fixing errors due to "the grid and pack problem" by:
-## Toshihiro Tanizawa
-## tanizawa@ee.kochi-ct.ac.jp
-## began at 2016-06-15(Wed) 17:10:17
-## fixed grid() and pack() problem on 2016-06-21(Tue) 18:29:40
 ##
 
 import matplotlib
